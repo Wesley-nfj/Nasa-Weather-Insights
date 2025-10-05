@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="text-center py-3">
+  <h1 class="display-5 fw-bold mb-2" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+    🌍 NASA Weather Insights
+  </h1>
+  <p class="text-light mb-0">Predict accurate weather conditions using Nasa's space data 🚀</p>
+</div>
+
+<div class="row justify-content-center mt-3">
+  <div class="col-md-7 col-lg-5">
+    <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 20px;">
+      <div class="card-body p-4">
+        
+        <!-- Card Header -->
+        <div class="text-center mb-3">
+          <h4 class="card-title text-white fw-bold mb-1">
+            <i class="bi bi-search"></i> Check Your Weather
+          </h4>
+        </div>
+
+        <!-- Form -->
+        <form method="POST" action="/results" id="weatherForm">
+          
+          <!-- Location Input -->
+          <div class="mb-3">
+            <label for="location" class="form-label text-white fw-semibold mb-2" style="font-size: 0.9rem;">
+              <i class="bi bi-geo-alt-fill text-primary"></i> Location
+            </label>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary text-light">
+                <i class="bi bi-pin-map"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control bg-dark border-secondary text-light" 
+                id="location" 
+                name="location" 
+                placeholder="e.g. Douala, Cameroon" 
+                required
+                style="border-left: none;">
+            </div>
+          </div>
+
+          <!-- Date & Time Input -->
+          <div class="mb-3">
+            <label for="datetime" class="form-label text-white fw-semibold mb-2" style="font-size: 0.9rem;">
+              <i class="bi bi-calendar-event text-warning"></i> Date & Time
+            </label>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary text-light">
+                <i class="bi bi-clock"></i>
+              </span>
+              <input 
+                type="datetime-local" 
+                class="form-control bg-dark border-secondary text-light" 
+                id="datetime" 
+                name="datetime" 
+                required
+                style="border-left: none;">
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-grid gap-2 mt-3">
+            <button 
+              type="submit" 
+              class="btn btn-lg fw-bold py-2 shadow-sm" 
+              id="submitBtn"
+              style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 10px; color: white; transition: transform 0.2s;">
+              <span id="btnText">
+                <i class="bi bi-rocket-takeoff-fill"></i> Launch Prediction
+              </span>
+              <span id="btnLoader" style="display: none;">
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Analyzing 10 years of NASA data
+              </span>
+            </button>
+          </div>
+
+        </form>
+
+        <script>
+          // Show loading spinner when form is submitted
+          document.getElementById('weatherForm').addEventListener('submit', function() {
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            
+            // Disable button and show loader
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-block';
+          });
+        </script>
+
+        <!-- Additional Info -->
+        <div class="text-center mt-3 pt-2 border-top border-secondary">
+          <small class="text-white">
+            <i class="bi bi-shield-check"></i> Powered by NASA data
+          </small>
+        </div>
+
+      </div>
+    </div>
+
+
+<style>
+  /* Input focus effects */
+  .form-control:focus {
+    background-color: #2c2c3e !important;
+    border-color: #667eea !important;
+    color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  }
+
+  .input-group-text {
+    border-right: none !important;
+  }
+
+  /* Button hover effect */
+  button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4) !important;
+  }
+
+  /* Placeholder styling */
+  .form-control::placeholder {
+    color: #6c757d;
+  }
+
+  /* Date/time input color fix for Chrome */
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+  }
+</style>
+
+{% endblock %}
