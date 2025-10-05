@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 900px;">
+
+  <!-- Header -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold mb-2">
+      <i class="bi bi-cloud-sun text-warning"></i> Weather Prediction Results
+    </h2>
+    <h6 class="text-white d-block mb-3">
+      📍 <strong>{{ city }}</strong> &nbsp; | &nbsp; 📅 <strong>{{ datetime }}</strong>
+    </h6>
+  </div>
+
+  <!-- Main Prediction Card -->
+  <div class="card shadow-lg mb-4 border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px;">
+    <div class="card-body text-center py-3">
+      <h1 class="display-3 fw-bold text-white mb-2">
+        {% if main_prediction == 'Hot' %}🔥
+        {% elif main_prediction == 'Cold' %}❄️
+        {% elif main_prediction == 'Rainy' %}🌧️
+        {% elif main_prediction == 'Windy' %}💨
+        {% elif main_prediction == 'Pleasant' %}☀️
+        {% elif main_prediction == 'Warm' %}🌤️
+        {% elif main_prediction == 'Cool' %}🌥️
+        {% endif %}
+        {{ main_prediction }}
+      </h1>
+      <h4 class="text-white mb-3">Expected: {{ temp_range }}</h4>
+      <p class="text-white mb-0">Average temperature: {{ avg_temp }}°C</p>
+    </div>
+  </div>
+
+  <!-- Weather Details Grid -->
+  <div class="row g-3 mb-4">
+    
+    <!-- Temperature Info -->
+    <div class="col-md-4">
+      <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+        <div class="card-body text-center text-white">
+          <i class="bi bi-thermometer-half" style="font-size: 2rem;"></i>
+          <h6 class="mt-2 mb-1">Temperature</h6>
+          <p class="mb-0 fw-bold" style="font-size: 1.2rem;">{{ temp_range }}</p>
+          <small class="text-white">Avg: {{ avg_temp }}°C</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wind Info -->
+    <div class="col-md-4">
+      <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+        <div class="card-body text-center text-white">
+          <i class="bi bi-wind" style="font-size: 2rem;"></i>
+          <h6 class="mt-2 mb-1">Wind Speed</h6>
+          <p class="mb-0 fw-bold" style="font-size: 1.2rem;">{{ wind_info.split('(')[0] }}</p>
+          <small class="text-white">{{ wind_info.split('(')[1].replace(')', '') }}</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rain Info -->
+    <div class="col-md-4">
+      <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+        <div class="card-body text-center text-white">
+          <i class="bi bi-cloud-rain" style="font-size: 2rem;"></i>
+          <h6 class="mt-2 mb-1">Precipitation</h6>
+          <p class="mb-0 fw-bold" style="font-size: 1.2rem;">{{ rain_info.split('(')[0] }}</p>
+          <small class="text-white">{{ rain_info.split('(')[1].replace(')', '') }}</small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Tip Card -->
+  <div class="alert alert-warning border-0 shadow-sm mb-4" style="border-radius: 10px;">
+    <div class="d-flex align-items-start">
+      <i class="bi bi-lightbulb-fill text-warning me-3" style="font-size: 1.5rem;"></i>
+      <div>
+        <h6 class="fw-bold mb-2">💡 Recommendation</h6>
+        <p class="mb-0">{{ tip }}</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-3">
+
+  <!-- Extreme Conditions Probabilities -->
+  <div class="mb-3">
+    <h5 class="fw-bold text-center mb-2">
+      <i class="bi bi-percent"></i> Probability of Extreme Conditions
+    </h5>
+    <p class="text-center text-muted small mb-4">Based on historical occurrences on this date over the past 5 years</p>
+  </div>
+
+  <div class="row g-3">
+
+    <!-- Very Hot -->
+    <div class="col-md-6">
+      <div class="card p-3 text-white border-0 shadow-sm" style="background-color:#ff4d4d; border-radius: 10px;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0"><i class="bi bi-thermometer-high"></i> Very Hot (&gt;30°C)</h6>
+          <span class="badge bg-white text-dark fw-bold">{{ probs['very_hot'] }}%</span>
+        </div>
+        <div class="progress" style="height: 10px; background-color:#ffe5e5; border-radius: 5px;">
+          <div class="progress-bar" role="progressbar"
+               style="width: {{ probs['very_hot'] }}%; background-color:#ff9999; border-radius:5px;"
+               aria-valuenow="{{ probs['very_hot'] }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Very Cold -->
+    <div class="col-md-6">
+      <div class="card p-3 text-white border-0 shadow-sm" style="background-color: #1420a4; border-radius:10px;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0"><i class="bi bi-snow"></i> Very Cold (&lt;10°C)</h6>
+          <span class="badge bg-white text-dark fw-bold">{{ probs['very_cold'] }}%</span>
+        </div>
+        <div class="progress" style="height: 10px; background-color:#c2c9ff; border-radius:5px;">
+          <div class="progress-bar" role="progressbar"
+               style="width: {{ probs['very_cold'] }}%; background-color:#4d79ff; border-radius:5px;"
+               aria-valuenow="{{ probs['very_cold'] }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Very Windy -->
+    <div class="col-md-6">
+      <div class="card p-3 text-white border-0 shadow-sm" style="background-color:#8599eb; border-radius:10px;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0"><i class="bi bi-wind"></i> Very Windy (&gt;10 m/s)</h6>
+          <span class="badge bg-white text-dark fw-bold">{{ probs['very_windy'] }}%</span>
+        </div>
+        <div class="progress" style="height: 10px; background-color:#d6ddf9; border-radius:5px;">
+          <div class="progress-bar" role="progressbar"
+               style="width: {{ probs['very_windy'] }}%; background-color:#667eea; border-radius:5px;"
+               aria-valuenow="{{ probs['very_windy'] }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Very Wet -->
+    <div class="col-md-6">
+      <div class="card p-3 border-0 shadow-sm" style="background-color:#63e6be; color:#000; border-radius:10px;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0"><i class="bi bi-cloud-rain-heavy"></i> Very Wet (&gt;10 mm)</h6>
+          <span class="badge bg-dark text-white fw-bold">{{ probs['very_wet'] }}%</span>
+        </div>
+        <div class="progress" style="height: 10px; background-color:#b2f1df; border-radius:5px;">
+          <div class="progress-bar" role="progressbar"
+               style="width: {{ probs['very_wet'] }}%; background-color:#20c997; border-radius:5px;"
+               aria-valuenow="{{ probs['very_wet'] }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Explanation -->
+  <div class="alert alert-info border-0 shadow-sm mt-4" style="border-radius: 10px;">
+    <h6 class="fw-bold mb-2"><i class="bi bi-info-circle"></i> How to Read This</h6>
+    <p class="mb-0 small">
+      The <strong>main prediction</strong> shows the most likely overall weather condition. 
+      The <strong>probabilities</strong> indicate how often extreme conditions occurred historically on this date. 
+      Higher percentages mean those extreme conditions are more likely to occur.
+    </p>
+  </div>
+
+  <!-- Back Button -->
+  <div class="text-center mt-4 mb-5">
+    <a href="{{ url_for('home') }}" class="btn btn-outline-light btn-lg px-5">
+      <i class="bi bi-arrow-left"></i> New Search
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}
